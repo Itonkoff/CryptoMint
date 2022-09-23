@@ -18,5 +18,9 @@ data class Currency(
     val maxSupply: String,
 
     @SerialName("icon_url")
-    val iconURL: String
+    val iconURL: String,
+
+    var rate: Double = 0.0,
+    var previousRate: Double = 0.0,
+    val numberOfCoins:Double = 0.0
 )
