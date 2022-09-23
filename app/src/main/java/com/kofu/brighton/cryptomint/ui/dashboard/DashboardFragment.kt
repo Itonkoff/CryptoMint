@@ -6,9 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.activityViewModels
+import com.kofu.brighton.cryptomint.data.Repository
 import com.kofu.brighton.cryptomint.databinding.FragmentDashboardBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+
+@AndroidEntryPoint
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
@@ -22,15 +26,22 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val dashboardViewModel =
-            ViewModelProvider(this).get(DashboardViewModel::class.java)
+        val viewModel: DashboardViewModel by activityViewModels()
+//        {
+//            DashboardViewModelFactory(Repository(context!!))
+//        }
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
         val textView: TextView = binding.textDashboard
-        dashboardViewModel.text.observe(viewLifecycleOwner) {
+        viewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
+        }
+
+        viewModel.allcs.observe(viewLifecycleOwner) {
+            val v = it
+            var x = 0
         }
         return root
     }

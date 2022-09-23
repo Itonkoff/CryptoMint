@@ -1,12 +1,14 @@
-package com.kofu.brighton.cryptomint
+package com.kofu.brighton.cryptomint.ui.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.kofu.brighton.cryptomint.data.Repository
 import com.kofu.brighton.cryptomint.data.apiclient.*
 import kotlinx.coroutines.launch
 
-class AppViewModel : ViewModel() {
+class AppViewModel(repository: Repository) : ViewModel() {
 
     var values = MutableLiveData<LiveValuesResponse>()
     var currencies = MutableLiveData<CurrencyListResponse>()

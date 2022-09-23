@@ -1,4 +1,4 @@
-package com.kofu.brighton.cryptomint
+package com.kofu.brighton.cryptomint.ui
 
 import android.os.Bundle
 import androidx.activity.viewModels
@@ -9,8 +9,12 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
+import com.kofu.brighton.cryptomint.R
 import com.kofu.brighton.cryptomint.databinding.ActivityMainBinding
+import com.kofu.brighton.cryptomint.ui.viewmodels.AppViewModel
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -33,20 +37,5 @@ class MainActivity : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
-
-
-        val model: AppViewModel by viewModels()
-//        model.makeRequest()
-        model.makeAnotherRequest()
-
-        model.values.observe(this, Observer {
-            val x = it
-            val y = 10
-        })
-
-        model.currencies.observe(this, Observer {
-            val x = it
-            val y = 10
-        })
     }
 }

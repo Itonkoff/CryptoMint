@@ -1,5 +1,6 @@
 package com.kofu.brighton.cryptomint.data.apiclient
 
+import com.kofu.brighton.cryptomint.data.entities.Currency
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -84,21 +85,6 @@ data class Crypto(
 
     @SerialName("KCS")
     val kcs: Currency,
-)
-
-@Serializable
-data class Currency(
-    val symbol: String,
-    val name: String,
-
-    @SerialName("name_full")
-    val nameFull: String,
-
-    @SerialName("max_supply")
-    val maxSupply: String,
-
-    @SerialName("icon_url")
-    val iconURL: String
 )
 
 
