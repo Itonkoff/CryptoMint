@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.load
+import com.kofu.brighton.cryptomint.R
 import com.kofu.brighton.cryptomint.data.entities.Currency
 import com.kofu.brighton.cryptomint.databinding.CurrencyListItemBinding
 
@@ -21,7 +22,7 @@ class CurrencyAdapter : ListAdapter<Currency, CurrencyViewHolder>(CURRENCY_COMPA
         holder.bind(getItem(position))
     }
 
-    companion object{
+    companion object {
         val CURRENCY_COMPARATOR = object : DiffUtil.ItemCallback<Currency>() {
             override fun areItemsTheSame(oldItem: Currency, newItem: Currency): Boolean {
                 return oldItem::class == newItem::class
@@ -49,10 +50,18 @@ class CurrencyViewHolder(private val itemBinding: CurrencyListItemBinding) :
         itemBinding.iconImageView.load(item.iconURL)
         itemBinding.cNameTextview.text = item.name
 
-        val winLossPercentage = ((item.rate - item.previousRate)/item.rate)*100
+        val winLossPercentage = ((item.rate - item.previousRate) / item.rate) * 100
+        if (winLossPercentage < 0)
+            itemBinding.changePercentageTextview.setTextColor(itemBinding.root.resources.getColor(R.color.loss_red))
 
-        itemBinding.changePercentageTextview.text = "$winLossPercentage"
-        itemBinding.balanceBreakdownTextview.text = "${item.numberOfCoins} x ${item.rate}"
-        itemBinding.totalBalanceTextview.text = "$ ${item.numberOfCoins * item.rate}"
+        if (winLossPercentage > 0)
+            itemBinding.changePercentageTextview.setTextColor(itemBinding.root.resources.getColor(R.color.gain_green))
+
+        if (winLossPercentage == 0.0)
+            itemBinding.changePercentageTextview.setTextColor(itemBinding.root.resources.getColor(R.color.black))
+
+        itemBinding.changePercentageTextview.text = "${String.format("%.2f", winLossPercentage)} %"
+        itemBinding.balanceBreakdownTextview.text = "${item.numberOfCoins} x ${String.format("%.2f",item.rate)}"
+        itemBinding.totalBalanceTextview.text = "$ ${String.format("%.2f",item.numberOfCoins * item.rate)}"
     }
 }
