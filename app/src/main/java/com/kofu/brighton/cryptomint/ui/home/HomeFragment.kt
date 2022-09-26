@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -16,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class HomeFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
+    private val viewModel: HomeViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,28 +28,32 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel: HomeViewModel by activityViewModels()
-
 
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val textView: TextView = binding.textHome
         viewModel.text.observe(viewLifecycleOwner) {
             textView.text = it
         }
 
-        val cAdapter = CurrencyAdapter()
+        val cAdapter = CurrencyAdapter(clickListener = {
+            Toast.makeText(context, it.symbol, Toast.LENGTH_LONG).show()
+        })
+
         binding.currenciesRecyclerview.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = cAdapter
         }
+
         viewModel.currencies.observe(viewLifecycleOwner) {
             cAdapter.submitList(it)
             viewModel.reconcileRates()
         }
-
-        return root
     }
 
     override fun onDestroyView() {

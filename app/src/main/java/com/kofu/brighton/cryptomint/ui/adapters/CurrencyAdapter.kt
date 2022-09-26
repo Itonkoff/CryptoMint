@@ -2,6 +2,7 @@ package com.kofu.brighton.cryptomint.ui.adapters
 
 import android.text.TextUtils
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -11,7 +12,8 @@ import com.kofu.brighton.cryptomint.R
 import com.kofu.brighton.cryptomint.data.entities.Currency
 import com.kofu.brighton.cryptomint.databinding.CurrencyListItemBinding
 
-class CurrencyAdapter : ListAdapter<Currency, CurrencyViewHolder>(CURRENCY_COMPARATOR) {
+class CurrencyAdapter(private val clickListener: (Currency) -> Unit) :
+    ListAdapter<Currency, CurrencyViewHolder>(CURRENCY_COMPARATOR) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder {
         val itemBinding =
             CurrencyListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -19,7 +21,9 @@ class CurrencyAdapter : ListAdapter<Currency, CurrencyViewHolder>(CURRENCY_COMPA
     }
 
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
-        holder.bind(getItem(position))
+        val currency = getItem(position)
+        holder.bind(currency)
+        holder.itemView.setOnClickListener { clickListener(currency) }
     }
 
     companion object {
@@ -51,17 +55,26 @@ class CurrencyViewHolder(private val itemBinding: CurrencyListItemBinding) :
         itemBinding.cNameTextview.text = item.name
 
         val winLossPercentage = ((item.rate - item.previousRate) / item.rate) * 100
+        itemBinding.changePercentageTextview.text = "${String.format("%.2f", winLossPercentage)} %"
         if (winLossPercentage < 0)
             itemBinding.changePercentageTextview.setTextColor(itemBinding.root.resources.getColor(R.color.loss_red))
 
-        if (winLossPercentage > 0)
-            itemBinding.changePercentageTextview.setTextColor(itemBinding.root.resources.getColor(R.color.gain_green))
+        if (winLossPercentage > 0) {
+            itemBinding.changePercentageTextview.setTextColor(
+                itemBinding.root.resources.getColor(
+                    R.color.gain_green
+                )
+            )
+            itemBinding.changePercentageTextview.text =
+                "+ ${itemBinding.changePercentageTextview.text}"
+        }
 
         if (winLossPercentage == 0.0)
             itemBinding.changePercentageTextview.setTextColor(itemBinding.root.resources.getColor(R.color.black))
 
-        itemBinding.changePercentageTextview.text = "${String.format("%.2f", winLossPercentage)} %"
-        itemBinding.balanceBreakdownTextview.text = "${item.numberOfCoins} x ${String.format("%.2f",item.rate)}"
-        itemBinding.totalBalanceTextview.text = "$ ${String.format("%.2f",item.numberOfCoins * item.rate)}"
+        itemBinding.balanceBreakdownTextview.text =
+            "${item.numberOfCoins} x ${String.format("%.2f", item.rate)}"
+        itemBinding.totalBalanceTextview.text =
+            "$ ${String.format("%.2f", item.numberOfCoins * item.rate)}"
     }
 }

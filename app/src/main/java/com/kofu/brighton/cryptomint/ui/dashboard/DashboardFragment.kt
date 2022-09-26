@@ -34,15 +34,16 @@ class DashboardFragment : Fragment() {
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        viewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+//        val textView: TextView = binding.textDashboard
+//        viewModel.text.observe(viewLifecycleOwner) {
+//            textView.text = it
+//        }
 
         viewModel.allcs.observe(viewLifecycleOwner) {
             val v = it
             var x = 0
         }
+
         return root
     }
 
