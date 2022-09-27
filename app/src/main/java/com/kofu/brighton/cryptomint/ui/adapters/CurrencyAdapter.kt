@@ -12,7 +12,7 @@ import com.kofu.brighton.cryptomint.R
 import com.kofu.brighton.cryptomint.data.entities.Currency
 import com.kofu.brighton.cryptomint.databinding.CurrencyListItemBinding
 
-class CurrencyAdapter(private val clickListener: (Currency) -> Unit) :
+class CurrencyAdapter(private val clickListener: (symbol: String) -> Unit) :
     ListAdapter<Currency, CurrencyViewHolder>(CURRENCY_COMPARATOR) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder {
         val itemBinding =
@@ -23,7 +23,7 @@ class CurrencyAdapter(private val clickListener: (Currency) -> Unit) :
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
         val currency = getItem(position)
         holder.bind(currency)
-        holder.itemView.setOnClickListener { clickListener(currency) }
+        holder.itemView.setOnClickListener { clickListener(currency.symbol) }
     }
 
     companion object {
@@ -33,15 +33,11 @@ class CurrencyAdapter(private val clickListener: (Currency) -> Unit) :
             }
 
             override fun areContentsTheSame(oldItem: Currency, newItem: Currency): Boolean {
-                var correct: Boolean
-
-                correct = TextUtils.equals(oldItem.symbol, newItem.symbol)
-                correct = TextUtils.equals(oldItem.name, newItem.name)
-                correct = TextUtils.equals(oldItem.nameFull, newItem.nameFull)
-                correct = TextUtils.equals(oldItem.maxSupply, newItem.maxSupply)
-                correct = TextUtils.equals(oldItem.iconURL, newItem.iconURL)
-
-                return correct
+                return (TextUtils.equals(oldItem.symbol, newItem.symbol) &&
+                        TextUtils.equals(oldItem.name, newItem.name) &&
+                        TextUtils.equals(oldItem.nameFull, newItem.nameFull) &&
+                        TextUtils.equals(oldItem.maxSupply, newItem.maxSupply) &&
+                        TextUtils.equals(oldItem.iconURL, newItem.iconURL))
             }
         }
     }

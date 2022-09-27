@@ -8,6 +8,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.kofu.brighton.cryptomint.databinding.FragmentHomeBinding
 import com.kofu.brighton.cryptomint.ui.adapters.CurrencyAdapter
@@ -42,7 +43,9 @@ class HomeFragment : Fragment() {
         }
 
         val cAdapter = CurrencyAdapter(clickListener = {
-            Toast.makeText(context, it.symbol, Toast.LENGTH_LONG).show()
+            val action =
+                HomeFragmentDirections.actionNavigationHomeToNavigationDashboard(it)
+            findNavController().navigate(action)
         })
 
         binding.currenciesRecyclerview.apply {

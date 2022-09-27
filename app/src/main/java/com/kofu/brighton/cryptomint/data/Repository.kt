@@ -10,7 +10,7 @@ import com.kofu.brighton.cryptomint.data.work.ReconcileCurrencyListWorker
 import com.kofu.brighton.cryptomint.data.work.ReconcileRatesWorker
 import kotlinx.coroutines.flow.Flow
 
-class Repository(dao: DAO, val context: Context) {
+class Repository(val dao: DAO, val context: Context) {
 
     var allCurrencies: Flow<List<Currency>> = dao.getAll()
 
@@ -24,5 +24,9 @@ class Repository(dao: DAO, val context: Context) {
         val workRequest: WorkRequest =
             OneTimeWorkRequestBuilder<ReconcileRatesWorker>().build()
         WorkManager.getInstance(context).enqueue(workRequest)
+    }
+
+    fun getCurrency(symbol: String):Flow<Currency> {
+        return dao.getCurrency(symbol)
     }
 }

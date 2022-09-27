@@ -20,4 +20,7 @@ interface DAO {
 
     @Update
     suspend fun update(currency: Currency)
+
+    @Query("SELECT * FROM currency WHERE symbol = :symbol")
+    fun getCurrency(symbol: String): Flow<Currency>
 }

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.fragment.navArgs
 import com.kofu.brighton.cryptomint.data.Repository
 import com.kofu.brighton.cryptomint.databinding.FragmentDashboardBinding
 import dagger.hilt.android.AndroidEntryPoint
@@ -16,6 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DashboardFragment : Fragment() {
 
     private var _binding: FragmentDashboardBinding? = null
+    private val viewModel: DashboardViewModel by activityViewModels()
 
     // This property is only valid between onCreateView and
     // onDestroyView.
@@ -26,25 +28,19 @@ class DashboardFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val viewModel: DashboardViewModel by activityViewModels()
-//        {
-//            DashboardViewModelFactory(Repository(context!!))
-//        }
+        val args: DashboardFragmentArgs by navArgs()
+        viewModel.fetchCurrency(args.symbol)
 
         _binding = FragmentDashboardBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-//        val textView: TextView = binding.textDashboard
-//        viewModel.text.observe(viewLifecycleOwner) {
-//            textView.text = it
-//        }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        viewModel.allcs.observe(viewLifecycleOwner) {
-            val v = it
-            var x = 0
+        viewModel.currency.observe(viewLifecycleOwner){
+            binding.curre.text = it?.nameFull
         }
-
-        return root
     }
 
     override fun onDestroyView() {
