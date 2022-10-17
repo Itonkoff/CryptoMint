@@ -55,7 +55,6 @@ class HomeFragment : Fragment() {
 
         viewModel.currencies.observe(viewLifecycleOwner) {
             cAdapter.submitList(it)
-            viewModel.reconcileRates()
         }
     }
 

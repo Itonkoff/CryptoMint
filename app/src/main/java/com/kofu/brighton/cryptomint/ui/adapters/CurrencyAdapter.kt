@@ -2,7 +2,6 @@ package com.kofu.brighton.cryptomint.ui.adapters
 
 import android.text.TextUtils
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
@@ -10,10 +9,12 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.kofu.brighton.cryptomint.R
 import com.kofu.brighton.cryptomint.data.entities.Currency
+import com.kofu.brighton.cryptomint.data.room.entities.CryptoCurrency
 import com.kofu.brighton.cryptomint.databinding.CurrencyListItemBinding
+import com.kofu.brighton.cryptomint.utils.CurrencyAnalysis
 
-class CurrencyAdapter(private val clickListener: (symbol: String) -> Unit) :
-    ListAdapter<Currency, CurrencyViewHolder>(CURRENCY_COMPARATOR) {
+class CurrencyAdapter(private val clickListener: (id: Int) -> Unit) :
+    ListAdapter<CryptoCurrency, CurrencyViewHolder>(CURRENCY_COMPARATOR) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CurrencyViewHolder {
         val itemBinding =
             CurrencyListItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -23,21 +24,21 @@ class CurrencyAdapter(private val clickListener: (symbol: String) -> Unit) :
     override fun onBindViewHolder(holder: CurrencyViewHolder, position: Int) {
         val currency = getItem(position)
         holder.bind(currency)
-        holder.itemView.setOnClickListener { clickListener(currency.symbol) }
+        holder.itemView.setOnClickListener {clickListener(currency.id)
+                    }
     }
 
     companion object {
-        val CURRENCY_COMPARATOR = object : DiffUtil.ItemCallback<Currency>() {
-            override fun areItemsTheSame(oldItem: Currency, newItem: Currency): Boolean {
+        val CURRENCY_COMPARATOR = object : DiffUtil.ItemCallback<CryptoCurrency>() {
+            override fun areItemsTheSame(oldItem: CryptoCurrency, newItem: CryptoCurrency): Boolean {
                 return oldItem::class == newItem::class
             }
 
-            override fun areContentsTheSame(oldItem: Currency, newItem: Currency): Boolean {
-                return (TextUtils.equals(oldItem.symbol, newItem.symbol) &&
+            override fun areContentsTheSame(oldItem: CryptoCurrency, newItem: CryptoCurrency): Boolean {
+                return (oldItem.id == newItem.id &&
                         TextUtils.equals(oldItem.name, newItem.name) &&
-                        TextUtils.equals(oldItem.nameFull, newItem.nameFull) &&
-                        TextUtils.equals(oldItem.maxSupply, newItem.maxSupply) &&
-                        TextUtils.equals(oldItem.iconURL, newItem.iconURL))
+                        oldItem.price== newItem.price &&
+                        oldItem.numberOfCoins== newItem.numberOfCoins)
             }
         }
     }
@@ -46,16 +47,18 @@ class CurrencyAdapter(private val clickListener: (symbol: String) -> Unit) :
 class CurrencyViewHolder(private val itemBinding: CurrencyListItemBinding) :
     RecyclerView.ViewHolder(itemBinding.root) {
 
-    fun bind(item: Currency) {
-        itemBinding.iconImageView.load(item.iconURL)
+    fun bind(item: CryptoCurrency) {
+
+//        CurrencyAnalysis.calculate(item)
+
+//        itemBinding.iconImageView.load(item.iconURL)
         itemBinding.cNameTextview.text = item.name
 
-        val winLossPercentage = ((item.rate - item.previousRate) / item.rate) * 100
-        itemBinding.changePercentageTextview.text = "${String.format("%.2f", winLossPercentage)} %"
-        if (winLossPercentage < 0)
+        itemBinding.changePercentageTextview.text = "${String.format("%.2f", CurrencyAnalysis.winLossPercentage)} %"
+        if (item.percentChange < 0)
             itemBinding.changePercentageTextview.setTextColor(itemBinding.root.resources.getColor(R.color.loss_red))
 
-        if (winLossPercentage > 0) {
+        if (item.percentChange > 0) {
             itemBinding.changePercentageTextview.setTextColor(
                 itemBinding.root.resources.getColor(
                     R.color.gain_green
@@ -65,12 +68,12 @@ class CurrencyViewHolder(private val itemBinding: CurrencyListItemBinding) :
                 "+ ${itemBinding.changePercentageTextview.text}"
         }
 
-        if (winLossPercentage == 0.0)
+        if (item.percentChange == 0.0)
             itemBinding.changePercentageTextview.setTextColor(itemBinding.root.resources.getColor(R.color.black))
 
         itemBinding.balanceBreakdownTextview.text =
-            "${item.numberOfCoins} x ${String.format("%.2f", item.rate)}"
+            "${item.numberOfCoins} x ${String.format("%.2f", item.price)}"
         itemBinding.totalBalanceTextview.text =
-            "$ ${String.format("%.2f", item.numberOfCoins * item.rate)}"
+            "$ ${String.format("%.2f", item.price * item.numberOfCoins)}"
     }
 }

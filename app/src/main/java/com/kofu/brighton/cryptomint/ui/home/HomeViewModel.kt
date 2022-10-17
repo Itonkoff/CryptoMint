@@ -18,7 +18,4 @@ class HomeViewModel
 
     val currencies = repository.allCurrencies.asLiveData()
 
-    fun reconcileRates() {
-repository.reconcileRates()
-    }
 }

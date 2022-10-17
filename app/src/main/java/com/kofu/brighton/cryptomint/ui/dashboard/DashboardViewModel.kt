@@ -2,10 +2,8 @@ package com.kofu.brighton.cryptomint.ui.dashboard
 
 import androidx.lifecycle.*
 import com.kofu.brighton.cryptomint.data.Repository
-import com.kofu.brighton.cryptomint.data.entities.Currency
-import com.kofu.brighton.cryptomint.ui.viewmodels.AppViewModel
+import com.kofu.brighton.cryptomint.data.room.entities.CryptoCurrency
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,11 +15,11 @@ class DashboardViewModel
         value = "This is dashboard Fragment"
     }
 
-    lateinit var currency: LiveData<Currency>
+    lateinit var currency: LiveData<CryptoCurrency>
 
     val text: LiveData<String> = _text
 
-    fun fetchCurrency(symbol: String) {
-        currency = repository.getCurrency(symbol).asLiveData()
+    fun fetchCurrency(id: Int) {
+        currency = repository.getCurrency(id).asLiveData()
     }
 }

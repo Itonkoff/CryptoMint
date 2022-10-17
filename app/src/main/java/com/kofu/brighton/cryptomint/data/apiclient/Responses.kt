@@ -1,91 +1,90 @@
 package com.kofu.brighton.cryptomint.data.apiclient
 
-import com.kofu.brighton.cryptomint.data.entities.Currency
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-// mend for a url for listing
-
 @Serializable
-class LiveValuesResponse(
-    val success: Boolean,
-    val terms: String,
-    val privacy: String,
-    val timestamp: Long,
-    val target: String,
-    val rates: Map<String, Double>
+data class ApiResponse (
+    val status: Status,
+//    val data: Map<String, Datum>
 )
 
 @Serializable
-data class CurrencyListResponse(
-    val success: Boolean,
-    val crypto: Crypto,
-    val fiat: Map<String, String>
-)
+data class Datum (
+    val id: Long,
+    val name: String,
+    val symbol: String,
+    val slug: String,
 
+    @SerialName("max_supply")
+    val maxSupply: Long? = null,
+
+    val quote: Quote
+)
 
 @Serializable
-data class Crypto(
-    @SerialName("BTC")
-    val btc: Currency,
-
-    @SerialName("ETH")
-    val eth: Currency,
-
-    @SerialName("BNB")
-    val bnb: Currency,
-
-    @SerialName("USDT")
-    val usdt: Currency,
-
-    @SerialName("XRP")
-    val xrp: Currency,
-
-    @SerialName("ADA")
-    val ada: Currency,
-
-    @SerialName("DOGE")
-    val doge: Currency,
-
-    @SerialName("TRX")
-    val trx: Currency,
-
-    @SerialName("LEO")
-    val leo: Currency,
-
-    @SerialName("ETC")
-    val etc: Currency,
-
-    @SerialName("LTC")
-    val ltc: Currency,
-
-    @SerialName("LINK")
-    val link: Currency,
-
-    @SerialName("XLM")
-    val xlm: Currency,
-
-    @SerialName("XMR")
-    val xmr: Currency,
-
-    @SerialName("BCH")
-    val bch: Currency,
-
-    @SerialName("XTZ")
-    val xtz: Currency,
-
-    @SerialName("MANA")
-    val mana: Currency,
-
-    @SerialName("EOS")
-    val eos: Currency,
-
-    @SerialName("THETA")
-    val theta: Currency,
-
-    @SerialName("KCS")
-    val kcs: Currency,
+data class Quote (
+    @SerialName("USD")
+    val usd: Usd
 )
+
+@Serializable
+data class Usd (
+    val price: Double,
+
+    @SerialName("volume_24h")
+    val volume24H: Double,
+
+    @SerialName("volume_change_24h")
+    val volumeChange24H: Double,
+
+    @SerialName("percent_change_1h")
+    val percentChange1H: Double,
+
+    @SerialName("percent_change_24h")
+    val percentChange24H: Double,
+
+    @SerialName("percent_change_7d")
+    val percentChange7D: Double,
+
+    @SerialName("percent_change_30d")
+    val percentChange30D: Double,
+
+    @SerialName("percent_change_60d")
+    val percentChange60D: Double,
+
+    @SerialName("percent_change_90d")
+    val percentChange90D: Double,
+
+    @SerialName("market_cap")
+    val marketCap: Double,
+
+    @SerialName("market_cap_dominance")
+    val marketCapDominance: Double,
+
+    @SerialName("fully_diluted_market_cap")
+    val fullyDilutedMarketCap: Double,
+
+    @SerialName("last_updated")
+    val lastUpdated: String
+)
+
+@Serializable
+data class Status (
+    val timestamp: String,
+
+    @SerialName("error_code")
+    val errorCode: Long,
+
+    @SerialName("error_message")
+    val errorMessage: String?,
+
+    val elapsed: Long,
+
+    @SerialName("credit_count")
+    val creditCount: Long,
+)
+
 
 
 

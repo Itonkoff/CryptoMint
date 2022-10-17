@@ -1,17 +1,12 @@
 package com.kofu.brighton.cryptomint.ui
 
 import android.os.Bundle
-import androidx.activity.viewModels
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupActionBarWithNavController
-import androidx.navigation.ui.setupWithNavController
 import com.kofu.brighton.cryptomint.R
 import com.kofu.brighton.cryptomint.databinding.ActivityMainBinding
-import com.kofu.brighton.cryptomint.ui.viewmodels.AppViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

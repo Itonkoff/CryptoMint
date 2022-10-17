@@ -12,22 +12,7 @@ import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
 import kotlinx.serialization.json.Json
 
-private const val TIME_OUT = 60_000
-
 val ktorHttpClient = HttpClient(Android) {
-
-//    install(HttpRequestRetry) {
-//        maxRetries = 2
-//        retryIf { request, response ->
-//            !response.status.isSuccess()
-//        }
-//        retryOnExceptionIf { request, cause ->
-//            cause is NetworkError
-//        }
-//        delayMillis { retry ->
-//            retry * 3000L
-//        } // retries in 3, 6, 9, etc. seconds
-//    }
 
     install(ContentNegotiation) {
         json(Json {

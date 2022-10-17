@@ -4,8 +4,9 @@ import android.content.Context
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.kofu.brighton.cryptomint.data.apiclient.getLiveValues
+import com.kofu.brighton.cryptomint.data.apiclient.getList
 import com.kofu.brighton.cryptomint.data.room.DAO
+import com.kofu.brighton.cryptomint.utils.mapToCryptoCurrency
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 
@@ -19,18 +20,17 @@ class ReconcileRatesWorker
     CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
-        val liveValues = getLiveValues()
-        val list = dao.getAllFrom()
+        val currencies = getList()
 
-        for (currency in list){
-            val rate = liveValues.rates[currency.symbol]
-            if (rate!=null) {
-                currency.previousRate = currency.rate
-                currency.rate = rate
-            }
-
-            dao.update(currency)
-        }
+//        for (currency in currencies.data) {
+//            val savedCurrency = dao.getCurrency(currency.value.id.toInt())
+//            if (savedCurrency != null) {
+//                savedCurrency.percentChange = currency.value.quote.usd.percentChange1H
+//                dao.update(savedCurrency)
+//            } else {
+//                dao.insert(mapToCryptoCurrency(currency.value))
+//            }
+//        }
 
         return Result.success()
     }
